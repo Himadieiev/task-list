@@ -1,9 +1,11 @@
-const TaskItem = () => {
+const TaskItem = (props) => {
+  const {className = "", id, title, isDone} = props;
+
   return (
-    <li className="task__item task-item">
-      <input className="task-item__checkbox" id="task-1" type="checkbox" checked />
-      <label className="task-item__label" htmlFor="task-1">
-        Task 1
+    <li className={`task-item ${className}`}>
+      <input className="task-item__checkbox" id={id} type="checkbox" checked={isDone} readOnly />
+      <label className="task-item__label" htmlFor={id}>
+        {title}
       </label>
       <button className="task-item__delete-button" aria-label="Delete" title="Delete">
         <svg

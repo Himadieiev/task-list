@@ -4,6 +4,11 @@ import TaskInfo from "./TaskInfo";
 import TaskList from "./TaskList";
 
 const Task = () => {
+  const tasks = [
+    {id: "task-1", title: "Task-1", isDone: false},
+    {id: "task-2", title: "Task-2", isDone: true},
+  ];
+
   return (
     <div className="task">
       <div className="task__title-wrapper">
@@ -21,8 +26,8 @@ const Task = () => {
       </div>
       <AddTaskForm />
       <SearchTaskForm />
-      <TaskInfo />
-      <TaskList />
+      <TaskInfo total={tasks.length} done={tasks.filter(({isDone}) => isDone).length} />
+      <TaskList tasks={tasks} />
     </div>
   );
 };
