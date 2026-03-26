@@ -1,13 +1,24 @@
 const TaskItem = (props) => {
-  const {className = "", id, title, isDone} = props;
+  const {className = "", id, title, isDone, onDeleteTaskButtonClick, onTaskCompleteChange} = props;
 
   return (
     <li className={`task-item ${className}`}>
-      <input className="task-item__checkbox" id={id} type="checkbox" checked={isDone} readOnly />
+      <input
+        className="task-item__checkbox"
+        id={id}
+        type="checkbox"
+        checked={isDone}
+        onChange={({target}) => onTaskCompleteChange(id, target.checked)}
+      />
       <label className="task-item__label" htmlFor={id}>
         {title}
       </label>
-      <button className="task-item__delete-button" aria-label="Delete" title="Delete">
+      <button
+        className="task-item__delete-button"
+        aria-label="Delete"
+        title="Delete"
+        onClick={() => onDeleteTaskButtonClick(id)}
+      >
         <svg
           width="20"
           height="20"

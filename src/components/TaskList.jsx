@@ -1,7 +1,7 @@
 import TaskItem from "./TaskItem";
 
 const TaskList = (props) => {
-  const {tasks = []} = props;
+  const {tasks = [], onDeleteTaskButtonClick, onTaskCompleteChange} = props;
 
   const hasTasks = true;
 
@@ -12,7 +12,13 @@ const TaskList = (props) => {
   return (
     <ul className="task__list">
       {tasks.map((task) => (
-        <TaskItem className="task__item" key={task.id} {...task} />
+        <TaskItem
+          className="task__item"
+          key={task.id}
+          onDeleteTaskButtonClick={onDeleteTaskButtonClick}
+          onTaskCompleteChange={onTaskCompleteChange}
+          {...task}
+        />
       ))}
     </ul>
   );

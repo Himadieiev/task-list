@@ -9,6 +9,26 @@ const Task = () => {
     {id: "task-2", title: "Task-2", isDone: true},
   ];
 
+  const deleteAllTasks = () => {
+    console.log("Delete all tasks");
+  };
+
+  const deleteTask = (taskId) => {
+    console.log(`Delete task ${taskId}`);
+  };
+
+  const toggleTaskComplete = (taskId, isDone) => {
+    console.log(`Task ${taskId}: ${isDone}`);
+  };
+
+  const filterTasks = (query) => {
+    console.log(`Search: ${query}`);
+  };
+
+  const addTask = () => {
+    console.log("Task added");
+  };
+
   return (
     <div className="task">
       <div className="task__title-wrapper">
@@ -24,10 +44,18 @@ const Task = () => {
         </svg>
         <h1 className="task__title">Task List</h1>
       </div>
-      <AddTaskForm />
-      <SearchTaskForm />
-      <TaskInfo total={tasks.length} done={tasks.filter(({isDone}) => isDone).length} />
-      <TaskList tasks={tasks} />
+      <AddTaskForm addTask={addTask} />
+      <SearchTaskForm onSearchInput={filterTasks} />
+      <TaskInfo
+        total={tasks.length}
+        done={tasks.filter(({isDone}) => isDone).length}
+        onDeleteAllButtonClick={deleteAllTasks}
+      />
+      <TaskList
+        tasks={tasks}
+        onDeleteTaskButtonClick={deleteTask}
+        onTaskCompleteChange={toggleTaskComplete}
+      />
     </div>
   );
 };
