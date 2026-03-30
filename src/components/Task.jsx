@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 import AddTaskForm from "./AddTaskForm";
 import SearchTaskForm from "./SearchTaskForm";
@@ -6,11 +6,20 @@ import TaskInfo from "./TaskInfo";
 import TaskList from "./TaskList";
 
 const Task = () => {
-  const [tasks, setTasks] = useState([
-    {id: "task-1", title: "Task-1", isDone: false},
-    {id: "task-2", title: "Task-2", isDone: true},
-  ]);
+  const [tasks, setTasks] = useState(() => {
+    const savedTasks = localStorage.getItem("tasks");
+
+    if (savedTasks) {
+      return JSON.parse(savedTasks);
+    }
+
+    return [
+      {id: "task-1", title: "Task-1", isDone: false},
+      {id: "task-2", title: "Task-2", isDone: true},
+    ];
+  });
   const [newTaskTitle, setNewTaskTitle] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const deleteAllTasks = () => {
     const isConfirmed = confirm("Are you sure you want to delete all tasks?");
@@ -37,10 +46,6 @@ const Task = () => {
     );
   };
 
-  const filterTasks = (query) => {
-    console.log(`Search: ${query}`);
-  };
-
   const addTask = () => {
     if (newTaskTitle.trim().length > 0) {
       const newTask = {
@@ -51,8 +56,19 @@ const Task = () => {
 
       setTasks([...tasks, newTask]);
       setNewTaskTitle("");
+      setSearchQuery("");
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
+  const clearSearchQuery = searchQuery.trim().toLocaleLowerCase();
+  const filteredTasks =
+    clearSearchQuery.length > 0
+      ? tasks.filter(({title}) => title.toLocaleLowerCase().includes(clearSearchQuery))
+      : null;
 
   return (
     <div className="task">
@@ -74,7 +90,7 @@ const Task = () => {
         newTaskTitle={newTaskTitle}
         setNewTaskTitle={setNewTaskTitle}
       />
-      <SearchTaskForm onSearchInput={filterTasks} />
+      <SearchTaskForm searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <TaskInfo
         total={tasks.length}
         done={tasks.filter(({isDone}) => isDone).length}
@@ -82,6 +98,7 @@ const Task = () => {
       />
       <TaskList
         tasks={tasks}
+        filteredTasks={filteredTasks}
         onDeleteTaskButtonClick={deleteTask}
         onTaskCompleteChange={toggleTaskComplete}
       />
