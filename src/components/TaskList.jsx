@@ -1,7 +1,14 @@
 import TaskItem from "./TaskItem";
 
 const TaskList = (props) => {
-  const {tasks = [], filteredTasks, onDeleteTaskButtonClick, onTaskCompleteChange} = props;
+  const {
+    tasks = [],
+    filteredTasks,
+    firstIncompleteTaskRef,
+    firstIncompleteTaskId,
+    onDeleteTaskButtonClick,
+    onTaskCompleteChange,
+  } = props;
 
   const hasTasks = tasks.length > 0;
   const isEmptyFilteredTasks = filteredTasks?.length === 0;
@@ -20,6 +27,7 @@ const TaskList = (props) => {
         <TaskItem
           className="task__item"
           key={task.id}
+          ref={task.id === firstIncompleteTaskId ? firstIncompleteTaskRef : null}
           onDeleteTaskButtonClick={onDeleteTaskButtonClick}
           onTaskCompleteChange={onTaskCompleteChange}
           {...task}

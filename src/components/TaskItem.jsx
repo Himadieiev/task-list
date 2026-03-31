@@ -1,8 +1,16 @@
 const TaskItem = (props) => {
-  const {className = "", id, title, isDone, onDeleteTaskButtonClick, onTaskCompleteChange} = props;
+  const {
+    className = "",
+    id,
+    title,
+    isDone,
+    ref,
+    onDeleteTaskButtonClick,
+    onTaskCompleteChange,
+  } = props;
 
   return (
-    <li className={`task-item ${className}`}>
+    <li className={`task-item ${className}`} ref={ref}>
       <input
         className="task-item__checkbox"
         id={id}
