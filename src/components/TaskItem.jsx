@@ -1,3 +1,5 @@
+import {memo} from "react";
+
 const TaskItem = (props) => {
   const {
     className = "",
@@ -47,4 +49,4 @@ const TaskItem = (props) => {
   );
 };
 
-export default TaskItem;
+export default memo(TaskItem);

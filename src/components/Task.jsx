@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 
 import AddTaskForm from "./AddTaskForm";
 import SearchTaskForm from "./SearchTaskForm";
@@ -26,32 +26,38 @@ const Task = () => {
   const firstIncompleteTaskRef = useRef(null);
   const firstIncompleteTaskId = tasks.find(({isDone}) => !isDone)?.id;
 
-  const deleteAllTasks = () => {
+  const deleteAllTasks = useCallback(() => {
     const isConfirmed = confirm("Are you sure you want to delete all tasks?");
 
     if (isConfirmed) {
       setTasks([]);
     }
-  };
+  }, []);
 
-  const deleteTask = (taskId) => {
-    setTasks(tasks.filter(({id}) => id !== taskId));
-  };
+  const deleteTask = useCallback(
+    (taskId) => {
+      setTasks(tasks.filter(({id}) => id !== taskId));
+    },
+    [tasks],
+  );
 
-  const toggleTaskComplete = (taskId, isDone) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === taskId
-          ? {
-              ...task,
-              isDone,
-            }
-          : task,
-      ),
-    );
-  };
+  const toggleTaskComplete = useCallback(
+    (taskId, isDone) => {
+      setTasks(
+        tasks.map((task) =>
+          task.id === taskId
+            ? {
+                ...task,
+                isDone,
+              }
+            : task,
+        ),
+      );
+    },
+    [tasks],
+  );
 
-  const addTask = () => {
+  const addTask = useCallback(() => {
     if (newTaskTitle.trim().length > 0) {
       const newTask = {
         id: crypto.randomUUID() ?? Date.now().toString(),
@@ -59,12 +65,12 @@ const Task = () => {
         isDone: false,
       };
 
-      setTasks([...tasks, newTask]);
+      setTasks((prevTasks) => [...prevTasks, newTask]);
       setNewTaskTitle("");
       setSearchQuery("");
       newTastInputRef.current.focus();
     }
-  };
+  }, [newTaskTitle]);
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -74,11 +80,15 @@ const Task = () => {
     newTastInputRef.current.focus();
   }, []);
 
-  const clearSearchQuery = searchQuery.trim().toLocaleLowerCase();
-  const filteredTasks =
-    clearSearchQuery.length > 0
+  const filteredTasks = useMemo(() => {
+    const clearSearchQuery = searchQuery.trim().toLocaleLowerCase();
+
+    return clearSearchQuery.length > 0
       ? tasks.filter(({title}) => title.toLocaleLowerCase().includes(clearSearchQuery))
       : null;
+  }, [searchQuery, tasks]);
+
+  const doneTasks = useMemo(() => tasks.filter(({isDone}) => isDone).length, [tasks]);
 
   return (
     <div className="task">
@@ -102,11 +112,7 @@ const Task = () => {
         newTastInputRef={newTastInputRef}
       />
       <SearchTaskForm searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-      <TaskInfo
-        total={tasks.length}
-        done={tasks.filter(({isDone}) => isDone).length}
-        onDeleteAllButtonClick={deleteAllTasks}
-      />
+      <TaskInfo total={tasks.length} done={doneTasks} onDeleteAllButtonClick={deleteAllTasks} />
       <Button onClick={() => firstIncompleteTaskRef.current?.scrollIntoView({behavior: "smooth"})}>
         Show first incomplete task
       </Button>

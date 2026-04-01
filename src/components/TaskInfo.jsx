@@ -1,3 +1,5 @@
+import {memo} from "react";
+
 const TaskInfo = (props) => {
   const {total, done, onDeleteAllButtonClick} = props;
 
@@ -17,4 +19,4 @@ const TaskInfo = (props) => {
   );
 };
 
-export default TaskInfo;
+export default memo(TaskInfo);
