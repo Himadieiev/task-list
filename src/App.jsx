@@ -1,7 +1,12 @@
 import Task from "./components/Task";
+import {TasksProvider} from "./context/TasksContext";
 
 const App = () => {
-  return <Task />;
+  return (
+    <TasksProvider>
+      <Task />
+    </TasksProvider>
+  );
 };
 
 export default App;
