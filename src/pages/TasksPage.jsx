@@ -1,4 +1,4 @@
-import Task from "../components/Task";
+import Task from "../components/Task/Task";
 import {TasksProvider} from "../context/TasksContext";
 
 const TasksPage = () => {
