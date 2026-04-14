@@ -7,12 +7,20 @@ import styles from "./TaskItem.module.scss";
 const TaskItem = (props) => {
   const {className = "", id, title, isDone} = props;
 
-  const {firstIncompleteTaskId, firstIncompleteTaskRef, deleteTask, toggleTaskComplete} =
-    useContext(TasksContext);
+  const {
+    firstIncompleteTaskId,
+    firstIncompleteTaskRef,
+    deleteTask,
+    toggleTaskComplete,
+    disappearingTaskId,
+    appearingTaskId,
+  } = useContext(TasksContext);
 
   return (
     <li
-      className={`${styles.item} ${className}`}
+      className={`${styles.item} ${className} 
+      ${disappearingTaskId === id ? styles.isDisappearing : ""} 
+      ${appearingTaskId === id ? styles.isAppearing : ""}`}
       ref={id === firstIncompleteTaskId ? firstIncompleteTaskRef : null}
     >
       <input
